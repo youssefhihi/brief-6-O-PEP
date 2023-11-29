@@ -7,11 +7,11 @@ Ce projet consiste à construire un site web pour une pépinière O'PEP en utili
 ## UML
 
 
-- [classe] (./images/diagramme-classe.pdf) 
-- [useCase] (./images/diagramme-cas-d'utilisateur.pdf) 
-- [useCase] (./images/diagramme-sequance(login).pdf) 
-- [sequence] (./images\diagramme-sequence(filtrage).pdf)
-- [sequence] (./images\diagramme-sequence(filtrage).pdf)
+- [classe] (.\images\diagramme-classe.pdf) 
+- [useCase] (.\images\diagramme-cas-d'utilisateur.pdf) 
+- [useCase] (.\images\diagramme-sequance(login).pdf) 
+- [sequence] (.\images\diagramme-sequence(filtrage).pdf)
+- [sequence] (.\images\diagramme-sequence(filtrage).pdf)
 
 
 ## Presentation
