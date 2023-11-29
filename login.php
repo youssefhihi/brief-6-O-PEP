@@ -7,29 +7,28 @@
     <title>Document</title>
 </head>
 <body>
+    
     <?php
+     $servername = "localhost";
+     $username = "root";
+     $dbpassword = "";
+     $dbname = "opep";
+     $conn = new mysqli($servername, $username, $dbpassword, $dbname);
+ 
      session_start();
-     $idUser = $_SESSION['iduser'];
-     $role =$_SESSION['role'] ;
+
     if (isset($_POST["submit"])) {
         $email = $_POST["email"];
         $password = $_POST["password"];
     
         // Database connection
-        $servername = "localhost";
-        $username = "root";
-        $dbpassword = "";
-        $dbname = "opep";
-    
-        $conn = new mysqli($servername, $username, $dbpassword, $dbname);
-    
         // Check connection
         if ($conn->connect_error) {
             die("Connection failed: " . $conn->connect_error);
         }
     
         // Retrieve user data from the database
-        $sql = "SELECT * FROM utilisateur WHERE email=?";
+        $sql = "SELECT * FROM utilisateur WHERE email = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("s", $email);
         $stmt->execute();

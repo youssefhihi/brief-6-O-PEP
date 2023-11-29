@@ -9,6 +9,7 @@
         <?php
         session_start();
         $idclient=$_SESSION['idclient'];
+
         $cnc = mysqli_connect("localhost", "root", "", "opep");
              $user = "SELECT * FROM utilisateur ";
             $user_result = mysqli_query($cnc, $user);
@@ -27,32 +28,24 @@
             }
          
       
-            if ((isset($_POST['search'])) && ($_SERVER["REQUEST_METHOD"] == "POST")) {
-                // Get the search term from the form
-                $searchTerm = mysqli_real_escape_string($cnc, $_POST['search']);
-            
-                // Query to search for plants
-                $searchQuery = "SELECT * FROM plante WHERE nom LIKE '%$searchTerm%'";
-                $searchResult = mysqli_query($cnc, $searchQuery);
-             }
+           
              if(isset($_POST['basketAdd'])){
-                $product_id = mysqli_real_escape_string($cnc,  $_POST['product_id']);
-                $client_id  = mysqli_real_escape_string($cnc,  $_POST['idclient']);
-                $req_panier = "INSERT INTO panier(id_utilisateur, id_plante) VALUES ('$product_id', '$client_id')";  
-                $panier = mysqli_query($cnc, $req_panier);
+                 $product_id = mysqli_real_escape_string($cnc,  $_POST['product_id']);
+                  
+                $client_id= $idclient;
+
+                
             
+                $req_panier = "INSERT INTO panier  (id_plante , id_utilisateur ) VALUES ('$product_id', '$client_id')";  
+                $panier = mysqli_query($cnc, $req_panier);
                 if($panier){
-                    echo "hmdulilah";
+                   
                     header("location:products.php ");
                     exit;
                 }else{
-                    echo "hhhhhhhhhh ma4ankhdmch" . mysqli_error($cnc);
+                    echo "error" . mysqli_error($cnc);
                 }
-             
-
-
-
-               
+         
             }
 
             $current_page = basename($_SERVER['PHP_SELF']);
@@ -74,49 +67,22 @@
         <li class="pt-1 <?php echo ($current_page == 'test.php') ? 'bg-green-500' : ''; ?> rounded-xl mx-auto border border-green-700 hover:bg-white w-28 hover:text-green-700 ease-in-out duration-300 text-center">
             <a class="font-medium" href="test.php">Contact</a>
         </li>
-
-        <img class=" cursor-pointer" src="images/panier.png" alt="">
-    </ul>
+   
+      <a class=" w-12 h-12 " href="basket.php"><img src="images/panier.png" alt=""></a>
+     </ul>
           
     </div>
   <div class="flex mt-5 md:justify-between flex-col gap-4 ">
          <h1 class=" ml-4   max-w-xl  text-left text-xl underline font-mono font-bold" >welcome <?php echo" $name_user  " ?></h1>
         
-    <form method="post" action="products.php" class="flex space-x-3 mr-3 justify-end">
+    <form method="post" action="search.php" class="flex space-x-3 mr-3 justify-end">
         <input class="border border-black bg-gray-200 rounded-xl" type="text" name="search" id="search" placeholder="search for a plant" required>
         
-        <button class="bg-black text-white rounded-xl w-14 h-8" name="search" value="search" onclick="openPopup()">search </button>
+        <button type="submit" class="bg-black text-white rounded-xl w-14 h-8">search </button>
     </form>
   </div>
 
- <!-- Popup -->
- <div id="popup"
-      class="fixed w-full h-full top-0 left-0  items-center flex justify-center bg-black bg-opacity-50 hidden z-20">
-      <!-- Popup content -->
-      <div id="myPopup"class="bg-white  pb-10 pt-10  flex space-x-5   justify-start items-center  overflow-y-auto md:h-fit">
-        <div class="flex flex-col gap-3 w-72 ml-5 text-center">
-            <?php
-           
-      
-if ($searchResult) {
-    while ($plant = mysqli_fetch_assoc($searchResult)) {
-        ?>                     
-        <p>Name: <?php echo $plant['nom']; ?> </p>
-        <p>Image: <img src="<?php echo $plant['image']; ?>" alt="<?php echo $plant['nom']; ?>"></p>
-        <p>Price: <?php echo $plant['prix']; ?> DH</p>
-        <hr>
-    <?php
-    }
-} else {
-
-    echo "Error in search query: " . mysqli_error($cnc);
-}
-?>
-
-         </div>
-      </div>
-    </div>
-    <!-- End of Popup -->
+ 
 
 
     <div class="flex mt-5 justify-between ">
@@ -127,7 +93,7 @@ if ($searchResult) {
                 <button name="product" value="all" class="filter-button  bg-white border rounded-xl border-green-500 text-green-500 h-14 w-28  hover:bg-green-400  ease-in-out duration-300 hover:text-white active:bg-green-400">All</button>
 
                 <?php
-                    // Reset the internal pointer of $categorie_result
+                    
                     mysqli_data_seek($categorie_result, 0);
                     $selected_product_id = 'all';
 
@@ -167,7 +133,7 @@ if (isset($_POST["product"]) && $_POST["product"] != 'all' ) {
                     <form action="" method="post">
                 <input type="hidden" name="product_id" value="<?php echo $product_id; ?>">
                 <input type="hidden" name="idclient" value="<?php echo $idclient; ?>">
-                <input type="submit" name="basketAdd"  class="bg-green-400 ml-16 mt-3 font-mono text-white border border-green-400 rounded-xl w-32 h-8 hover:shadow-2xl hover:bg-white hover:text-green-400 ease-in-out duration-300 ">
+                <input type="submit" value="Add to basket" name="basketAdd"  class="bg-green-400 ml-16 mt-3 font-mono text-white border border-green-400 rounded-xl w-32 h-8 hover:shadow-2xl hover:bg-white hover:text-green-400 ease-in-out duration-300 ">
            
             </form>
          </div>
@@ -194,7 +160,7 @@ if (isset($_POST["product"]) && $_POST["product"] != 'all' ) {
                 <img src="<?php echo "$product_image" ?>" alt="" class="w-56 h-36  mt-3 rounded-xl mx-auto">
                 <h1 class="font-mono font-bold text-center mt-3"> <?php echo" $product_name" ?></h1>
               <?php
-                // Fetch and display the category for the current product
+            
                 $category_query = "SELECT * FROM categorie WHERE id = $product_category_id";
                 $category_result = mysqli_query($cnc, $category_query);
 
@@ -214,7 +180,7 @@ if (isset($_POST["product"]) && $_POST["product"] != 'all' ) {
                 <form action="" method="post">
                 <input type="hidden" name="product_id" value="<?php echo $product_id; ?>">
                 <input type="hidden" name="idclient" value="<?php echo $idclient; ?>">
-                <input type="submit" name="basketAdd"  class="bg-green-400 ml-16 mt-3 font-mono text-white border border-green-400 rounded-xl w-32 h-8 hover:shadow-2xl hover:bg-white hover:text-green-400 ease-in-out duration-300 ">
+                <input type="submit" value="Add to basket" name="basketAdd"  class="bg-green-400 ml-16 mt-3 font-mono text-white border border-green-400 rounded-xl w-32 h-8 hover:shadow-2xl hover:bg-white hover:text-green-400 ease-in-out duration-300 ">
            
             </form>
           </div>
@@ -240,22 +206,6 @@ if (isset($_POST["product"]) && $_POST["product"] != 'all' ) {
 </div>
 
 
-<script>
-    // Open the popup
-    function openPopup() {
-            
-            document.getElementById("popup").classList.remove("hidden");
-    }
-  
-  // Close the popup when clicking outside the popup content
-  window.onclick = function (event) {
-    var popup = document.getElementById("popup");
-    if (event.target == popup) {
-      popup.classList.add("hidden");
-    }
-};
 
-
-</script>
 </body>
 </html>
