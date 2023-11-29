@@ -134,7 +134,7 @@ if (isset($_POST["product"]) && $_POST["product"] != 'all' ) {
                 <input type="hidden" name="product_id" value="<?php echo $product_id; ?>">
                 <input type="hidden" name="idclient" value="<?php echo $idclient; ?>">
                 <input type="submit" value="Add to basket" name="basketAdd"  class="bg-green-400 ml-16 mt-3 font-mono text-white border border-green-400 rounded-xl w-32 h-8 hover:shadow-2xl hover:bg-white hover:text-green-400 ease-in-out duration-300 ">
-           
+           <!--  final-->
             </form>
          </div>
                 <?php
